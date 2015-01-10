@@ -6,7 +6,8 @@ class Draw(object):
     RGB_BLACK = (0, 0, 0)
     RGB_WHITE = (255, 255, 255)
     RGB_RED = (237, 28, 36)
-    FONT = ('normal', 28)
+    WORD_FONT = ("normal", 28)
+    INFO_FONT = ("normal", 16)
 
     def __init__(self):
         self.canvas = None
@@ -18,6 +19,9 @@ class Draw(object):
         self.screen_height = self.canvas.size[1]
         self.focus_x = self.screen_width / 3.
         self.focus_y = self.screen_height / 2.
+
+    def clear(self):
+        self.img.clear(Draw.RGB_WHITE)
 
     def redraw(self, rect=(0, 0, 0, 0)):
         if not self.canvas:
@@ -31,19 +35,24 @@ class Draw(object):
                       0,
                       self.focus_x,
                       self.focus_y-30),
-                      3)
+                      width=1,
+                      outline=Draw.RGB_BLACK)
         # buttom line
         self.img.line((self.focus_x,
                       self.screen_height,
                       self.focus_x,
                       self.focus_y+10),
-                      3)
+                      width=1,
+                      outline=Draw.RGB_BLACK)
 
-    def text(self, text, color, x, y):
-        self.img.text((x, y), text, fill=color, font=Draw.FONT)
+    def text(self, text, color, x, y, font):
+        self.img.text((x, y),
+                        text,
+                        fill=color,
+                        font=font)
 
     def text_width(self, text):
-        return self.canvas.measure_text(text, Draw.FONT)[0][2]
+        return self.canvas.measure_text(text, Draw.WORD_FONT)[0][2]
 
     def get_prefix(self, word, focus):
         if focus == 0:
@@ -74,12 +83,7 @@ class Draw(object):
             Draw one word. Separate word by prefix,
             middle marked letter and last part.
         """
-        self.img.clear(Draw.RGB_WHITE)
         self.background()
-
-        if len(word) == 0:
-            self.redraw()
-            return
 
         prefix, prefix_w = self.get_prefix(word, focus_letter)
         fletter, fletter_w = self.get_focus_letter(word, focus_letter)
@@ -90,19 +94,28 @@ class Draw(object):
         # draw all parts
         if prefix_w > 0:
             self.text(prefix,
-                          Draw.RGB_BLACK,
-                          self.focus_x - prefix_w - fletter_hw,
-                          self.focus_y)
+                      Draw.RGB_BLACK,
+                      self.focus_x - prefix_w - fletter_hw,
+                      self.focus_y,
+                      Draw.WORD_FONT)
 
         self.text(fletter,
-                      Draw.RGB_RED,
-                      self.focus_x - fletter_hw,
-                      self.focus_y)
+                  Draw.RGB_RED,
+                  self.focus_x - fletter_hw,
+                  self.focus_y,
+                  Draw.WORD_FONT)
 
         if postfix:
             self.text(postfix,
-                          Draw.RGB_BLACK,
-                          self.focus_x + fletter_hw,
-                          self.focus_y)
+                      Draw.RGB_BLACK,
+                      self.focus_x + fletter_hw,
+                      self.focus_y,
+                      Draw.WORD_FONT)
 
         self.redraw()
+
+    def info(self, wpm):
+        self.text(u"%swpm" % wpm,
+                  Draw.RGB_BLACK,
+                  10, 20,
+                  Draw.INFO_FONT)
