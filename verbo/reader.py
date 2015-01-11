@@ -100,9 +100,11 @@ class Reader(Dialog):
             self.display_scene()
 
     def display_scene(self):
-        best_letter = self.best_letter_pos(self.words[self.currword_idx])
+        word = self.words[self.currword_idx]
+        best_letter = self.best_letter_pos(word)
+
         self.draw.clear()
-        self.draw.word(self.words[self.currword_idx], best_letter)
+        self.draw.word(word, best_letter)
         if self.pause:
             self.draw.info(self.wpm)
         self.draw.redraw()
@@ -132,7 +134,7 @@ class Reader(Dialog):
 
     def start_reading(self):
         offset = self.currword_idx
-        last_idx = len(self.words[offset:])-1
+        last_idx = len(self.words)-1
 
         for i in range(offset, last_idx):
             # when user press pause or exit from reader
