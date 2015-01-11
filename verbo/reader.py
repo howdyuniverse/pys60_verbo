@@ -11,7 +11,7 @@ class Reader(Dialog):
 
     PUNCT_MARKS = (",", ".", "-", ":")
 
-    def __init__(self, cbk, book_title, book_path):
+    def __init__(self, cbk, book_title, book_path, last_pos):
         menu = [(u"Start", self.reader_start),
                 (u"Pause", self.reader_pause),
                 (u"Close book", self.close_reader)]
@@ -19,7 +19,7 @@ class Reader(Dialog):
         self.book_title = book_title
         self.book_path = book_path
         self.pause = False
-        self.currword_idx = 0
+        self.currword_idx = last_pos
         self.wpm = 250
         self.init_delay()
         self.words = []
@@ -69,8 +69,8 @@ class Reader(Dialog):
         # enable rewind when pause
         self.draw.canvas.bind(key_codes.EScancode6, self.prev_word)
         self.draw.canvas.bind(key_codes.EScancode4, self.next_word)
-        self.draw.canvas.bind(key_codes.EScancode7, self.dec_wpm)
-        self.draw.canvas.bind(key_codes.EScancode9, self.inc_wpm)
+        self.draw.canvas.bind(key_codes.EScancode7, self.inc_wpm)
+        self.draw.canvas.bind(key_codes.EScancode9, self.dec_wpm)
         self.display_scene()
 
     def inc_wpm(self):

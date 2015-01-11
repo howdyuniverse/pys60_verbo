@@ -24,8 +24,14 @@ class VerboApp(Application):
 
     def update_liblist(self):
         self.book_list = self.lib_mgr.get_books()
+        ob_callback = self.open_book
+
+        if not self.book_list:
+            self.book_list = [(u"Empty", u"add books by menu")]
+            ob_callback = lambda: None
+
         self.set_ui(u"Verbo / Library",
-                    appuifw.Listbox(self.book_list, self.open_book),
+                    appuifw.Listbox(self.book_list, ob_callback),
                     self.main_menu)
         self.refresh()
 
@@ -33,12 +39,15 @@ class VerboApp(Application):
         curr_book = appuifw.app.body.current()
         title = self.book_list[curr_book][0]
         path = self.book_list[curr_book][1]
+        pos = self.lib_mgr.get_bookpos(path)
 
         def cbk():
+            # when closing reader save last position 
+            self.lib_mgr.update_book(path, title, self.dlg.currword_idx)
             self.refresh()
             return True
 
-        self.dlg = Reader(cbk, title, path)
+        self.dlg = Reader(cbk, title, path, pos)
         self.dlg.run()
 
     def add_book(self):
