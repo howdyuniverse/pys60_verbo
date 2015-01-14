@@ -5,11 +5,11 @@ import e32
 
 from window import Dialog
 from draw import Draw
-
+from fb2parser import FB2Parser
 
 class Reader(Dialog):
 
-    PUNCT_MARKS = (",", ".", "-", ":")
+    PUNCT_MARKS = (",", ".", "-", ":", "?", "!")
 
     def __init__(self, cbk, book_title, book_path, last_pos):
         menu = [(u"Start", self.reader_start),
@@ -46,12 +46,23 @@ class Reader(Dialog):
         """ Parse words from book into self.word.
             Now support only txt format.
         """
+        book_ext = self.book_path.split(".")[-1]
+        if book_ext == "txt":
+            self.parse_txt()
+        elif book_ext == "fb2":
+            self.parse_fb2()
+
+    def parse_txt(self):
         book_file = codecs.open(self.book_path, "r", "utf-8")
         for line in book_file:
             for w in line.split():
                 self.words.append(w)
 
         book_file.close()
+
+    def parse_fb2(self):
+        fb2 = FB2Parser(self.book_path)
+        self.words = fb2.parse_words()
 
     def reader_start(self):
         self.pause = False

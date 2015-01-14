@@ -43,16 +43,16 @@ class VerboApp(Application):
 
         def cbk():
             # when closing reader save last position 
-            self.lib_mgr.update_book(path, title, self.dlg.currword_idx)
+            self.lib_mgr.update_book(path, title, dialog.currword_idx)
             self.refresh()
             return True
 
-        self.dlg = Reader(cbk, title, path, pos)
-        self.dlg.run()
+        dialog = Reader(cbk, title, path, pos)
+        dialog.run()
 
     def add_book(self):
-        self.dialog = FileSel(mask = r"(.*\.txt|.*\.fb2)")
-        path = self.dialog.run()
+        dialog = FileSel(mask = r"(.*\.txt|.*\.fb2)")
+        path = dialog.run()
 
         if path is not None:
             title = path.split("\\")[-1]
