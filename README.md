@@ -8,9 +8,9 @@
 #### Controls
 - 5 - start/pause
 
+(on pause)
 - 4 - previous word
 - 6 - next word
 
-(on pause)
 - 7 - increase speed
 - 9 - decrease speed
