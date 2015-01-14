@@ -6,11 +6,11 @@
 - fb2
 
 #### Controls
-5 - start/pause
+- 5 - start/pause
 
-4 - previous word
-6 - next word
+- 4 - previous word
+- 6 - next word
 
 (on pause)
-7 - increase speed
-9 - decrease speed
+- 7 - increase speed
+- 9 - decrease speed
