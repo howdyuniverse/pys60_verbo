@@ -1,6 +1,7 @@
 import appuifw
 import graphics
 
+
 class Draw(object):
 
     RGB_BLACK = (0, 0, 0)

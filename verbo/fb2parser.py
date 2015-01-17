@@ -1,7 +1,12 @@
+"""
+    Parsers:
+    http://www.mobilenin.com/pys60/resources/pyexpat_example.py
+"""
+
 from xml.parsers import expat
 
 
-class XMLParser:
+class XMLParser(object):
 
     def __init__(self):
         self.parser = expat.ParserCreate()

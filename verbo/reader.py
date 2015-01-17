@@ -23,6 +23,7 @@ class Reader(Dialog):
         self.wpm = 250
         self.init_delay()
         self.words = []
+        self.words_num = 0
         self.parse_words()
 
         self.old_orientation = appuifw.app.orientation
@@ -43,17 +44,19 @@ class Reader(Dialog):
         self.punct_delay = self.word_delay * 2
 
     def parse_words(self):
-        """ Parse words from book into self.word.
-            Now support only txt format.
-        """
+        """ Parse words from book into self.word """
         book_ext = self.book_path.split(".")[-1]
+
         if book_ext == "txt":
             self.parse_txt()
         elif book_ext == "fb2":
             self.parse_fb2()
 
+        self.words_num = len(self.words)-1
+
     def parse_txt(self):
         book_file = codecs.open(self.book_path, "r", "utf-8")
+
         for line in book_file:
             for w in line.split():
                 self.words.append(w)
@@ -72,16 +75,20 @@ class Reader(Dialog):
         self.draw.canvas.bind(key_codes.EScancode4, lambda: None)
         self.draw.canvas.bind(key_codes.EScancode7, lambda: None)
         self.draw.canvas.bind(key_codes.EScancode9, lambda: None)
+        self.draw.canvas.bind(key_codes.EScancodeStar, lambda: None)
+        self.draw.canvas.bind(key_codes.EScancodeHash, lambda: None)
         self.start_reading()
 
     def reader_pause(self):
         self.pause = True
         self.draw.canvas.bind(key_codes.EScancode5, self.reader_start)
         # enable rewind when pause
-        self.draw.canvas.bind(key_codes.EScancode6, self.prev_word)
-        self.draw.canvas.bind(key_codes.EScancode4, self.next_word)
-        self.draw.canvas.bind(key_codes.EScancode7, self.inc_wpm)
-        self.draw.canvas.bind(key_codes.EScancode9, self.dec_wpm)
+        self.draw.canvas.bind(key_codes.EScancode6, lambda: self.rewind(-1))
+        self.draw.canvas.bind(key_codes.EScancode4, lambda: self.rewind(1))
+        self.draw.canvas.bind(key_codes.EScancode7, lambda: self.rewind(10))
+        self.draw.canvas.bind(key_codes.EScancode9, lambda: self.rewind(-10))
+        self.draw.canvas.bind(key_codes.EScancodeStar, self.inc_wpm)
+        self.draw.canvas.bind(key_codes.EKeyHash, self.dec_wpm)
         self.display_scene()
 
     def inc_wpm(self):
@@ -98,17 +105,17 @@ class Reader(Dialog):
             self.init_delay()
             self.display_scene()
 
-    def prev_word(self):
-        new_idx = self.currword_idx - 1
-        if new_idx >= 0:
-            self.currword_idx = new_idx
-            self.display_scene()
+    def rewind(self, offset):
+        new_idx = self.currword_idx + offset
 
-    def next_word(self):
-        new_idx = self.currword_idx + 1
-        if new_idx <= len(self.words)-1:
+        if new_idx >= 0 and new_idx <= self.words_num:
             self.currword_idx = new_idx
-            self.display_scene()
+        elif new_idx < 0:
+            self.currword_idx = 0
+        elif new_idx > self.words_num:
+            self.currword_idx = self.words_num
+
+        self.display_scene()
 
     def display_scene(self):
         word = self.words[self.currword_idx]
@@ -164,5 +171,6 @@ class Reader(Dialog):
         self.reader_pause()
 
     def close_reader(self):
+        del self.words[:]
         appuifw.app.orientation = self.old_orientation
         self.cancel_app()
