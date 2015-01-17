@@ -16,5 +16,5 @@
 - 7 - rewind forward on 10 words
 - 8 - rewind backward on 10 words
 
-- * (star) - increase speed
-- # (hash) - decrease speed
+- "*" (star) - increase speed
+- "#" (hash) - decrease speed
