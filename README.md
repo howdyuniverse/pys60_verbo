@@ -6,11 +6,15 @@
 - fb2
 
 #### Controls
-- 5 - start/pause
+- 5 - pause
 
 (on pause)
-- 4 - previous word
-- 6 - next word
+- 5 - start
 
-- 7 - increase speed
-- 9 - decrease speed
+- 4 - next word
+- 6 - previous word
+- 7 - rewind forward on 10 words
+- 8 - rewind backward on 10 words
+
+- * (star) - increase speed
+- # (hash) - decrease speed
