@@ -1,6 +1,8 @@
 # Verbo
 ###### Text reader based on RSVP technology for PyS60 platform
 
+![screenshot 1](/screenshots/screen_0.png)
+
 #### Supported formats:
 - txt
 - fb2
